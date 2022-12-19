@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  mfe-dashboard:
+    image: mfe-dashboard-app
+    build:
+      context: .
+      dockerfile: /apps/dashboard/Dockerfile
+    restart: always
+    ports:
+      - "4200:80"
+    networks:
+      - rest
+
+  mfe-login:
+    image: mfe-login-app
+    build:
+      context: .
+      dockerfile: /apps/login/Dockerfile
+    restart: always
+    ports:
+      - "4201:80"
+    networks:
+      - rest
+    depends_on:
+      - mfe-dashboard
+
+networks:
+  rest:
+    driver: bridge
