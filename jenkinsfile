@@ -1,14 +1,21 @@
 #!/usr/bin/env groov
-pipeline{
-  agente none
-  stages {
-    stage('Build'){
-      agent {
-        docker {imagem 'maven'}
-      }
-      steps {
-        sh 'echo build pipe ok'
-      }
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                //
+            }
+        }
+        stage('Test') {
+            steps {
+                //
+            }
+        }
+        stage('Deploy') {
+            steps {
+                //
+            }
+        }
     }
-  }
 }
