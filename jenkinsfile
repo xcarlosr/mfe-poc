@@ -1,4 +1,5 @@
 #!/usr/bin/env groov
+tools { nodejs "NodeJS" }
 pipeline {
     agent any
     stages {
