@@ -12,8 +12,9 @@ pipeline {
        stage('NPM Install') {
         steps {
           script {
-              sh 'npm install'
-              sh 'ng --version'
+              sh 'cd /var/jenkins_home/workspace/mfe-dashboard'
+              sh 'ls'
+              // sh 'npm install'
           }
         }
       }
