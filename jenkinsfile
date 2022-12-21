@@ -5,8 +5,7 @@ pipeline {
     stages {
       stage("Updade Source"){
         steps {
-          echo 'Atualizando o projeto'
-          get url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
+          checkout scm
         }
       }
 
