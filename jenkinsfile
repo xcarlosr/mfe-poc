@@ -12,9 +12,7 @@ pipeline {
        stage('NPM Install') {
         steps {
           script {
-              // sh 'cd /var/jenkins_home/workspace/mfe-dashboard'
-              sh 'ls'
-              // sh 'npm i'
+              sh 'npm i'
           }
         }
       }
@@ -33,8 +31,7 @@ pipeline {
       stage('Build') {
         steps {
           script {
-            sh 'ls'
-            // sh 'ng build --prod --aot --sm --progress=false'
+            sh 'npx nx build dashboard'
           }
         }
       }
