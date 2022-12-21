@@ -9,7 +9,7 @@ pipeline {
       }
 
        stage('NPM Install') {
-        nodejs(nodeJSInstallationName: 'Node 18.12.1', configId: 'nodeJS') {
+        script {
             sh 'npm install'
         }
       }
@@ -26,7 +26,7 @@ pipeline {
       // }
 
       stage('Build') {
-       nodejs(nodeJSInstallationName: 'Node 18.12.1', configId: 'nodeJS') {
+       script {
           sh 'ng build --prod --aot --sm --progress=false'
         }
       }
@@ -38,7 +38,7 @@ pipeline {
 
       stage('Deploy') {
           // milestone()
-        nodejs(nodeJSInstallationName: 'Node 6.x', configId: '<config-file-provider-id>') {
+       steps {
           echo "Deploying..."
         }
       }
