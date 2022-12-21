@@ -5,6 +5,7 @@ pipeline {
     stages {
       stage("Updade Source"){
         steps {
+          echo 'Atualizando o projeto'
           checkout scm
         }
       }
