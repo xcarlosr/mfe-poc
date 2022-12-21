@@ -3,13 +3,14 @@ pipeline {
     agent any
     tools { nodejs "node" }
     stages {
-      stage("Teste"){
+      stage("Updade Source"){
         steps {
-          echo 'Teste stage'
+          echo 'Baixando o projeto'
+          get url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
         }
       }
 
-       stage('NPM Install') {
+      stage('NPM Install') {
         steps {
           script {
               sh 'npm i'
@@ -28,7 +29,7 @@ pipeline {
       //     sh 'ng lint'
       // }
 
-      stage('Build') {
+      stage('Build All Projects ') {
         steps {
           script {
             sh 'npx nx build dashboard'
