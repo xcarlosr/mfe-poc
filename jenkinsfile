@@ -12,9 +12,9 @@ pipeline {
        stage('NPM Install') {
         steps {
           script {
-              sh 'cd /var/jenkins_home/workspace/mfe-dashboard'
+              // sh 'cd /var/jenkins_home/workspace/mfe-dashboard'
               sh 'ls'
-              sh 'npm i'
+              // sh 'npm i'
           }
         }
       }
