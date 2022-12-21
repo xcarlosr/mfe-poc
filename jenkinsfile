@@ -1,7 +1,7 @@
 #!/usr/bin/env groov
-tools { nodejs "NodeJS" }
 pipeline {
     agent any
+    tools { nodejs "node" }
     stages {
       stage("Teste"){
         steps {
@@ -13,6 +13,7 @@ pipeline {
         steps {
           script {
               sh 'npm install'
+              sh 'ng --version'
           }
         }
       }
