@@ -14,7 +14,7 @@ pipeline {
           script {
               sh 'cd /var/jenkins_home/workspace/mfe-dashboard'
               sh 'ls'
-              // sh 'npm install'
+              sh 'npm i'
           }
         }
       }
