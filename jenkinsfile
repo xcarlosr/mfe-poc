@@ -49,7 +49,7 @@ pipeline {
         }
         stage("Docker push Image") {
             steps {
-                docker.withRegistry('https://hub.docker.com/xcarlosr', 'dockerhub'){
+                docker.withRegistry('https://hub.docker.com/', 'dockerhub'){
                   dockerapp.push('latest')
                   dokcerapp.push("${evn.BUILD_ID}")
                 }
