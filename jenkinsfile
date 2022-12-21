@@ -9,9 +9,9 @@ pipeline {
       }
 
        stage('NPM Install') {
-         steps {
-          sh 'npm install'
-         }
+        nodejs(nodeJSInstallationName: 'Node 6.x', configId: '<config-file-provider-id>') {
+            sh 'npm install'
+        }
       }
 
       // stage('Test') {
@@ -26,7 +26,7 @@ pipeline {
       // }
 
       stage('Build') {
-        steps {
+        nodejs(nodeJSInstallationName: 'Node 6.x', configId: '<config-file-provider-id>') {
           sh 'ng build --prod --aot --sm --progress=false'
         }
       }
@@ -38,7 +38,7 @@ pipeline {
 
       stage('Deploy') {
           // milestone()
-        steps {
+        nodejs(nodeJSInstallationName: 'Node 6.x', configId: '<config-file-provider-id>') {
           echo "Deploying..."
         }
       }
