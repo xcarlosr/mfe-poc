@@ -41,8 +41,8 @@ pipeline {
       stages{
         steps {
             script {
-              dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}"),
-              "-f ./apps/dashboard/Dockerfile ."
+              dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}",
+              "-f ./apps/dashboard/Dockerfile .")
             }
           }
         }
