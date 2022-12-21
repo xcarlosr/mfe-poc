@@ -1,0 +1,32 @@
+#!/usr/bin/env groov
+pipeline {
+    agent any
+    stages {
+      stage("Teste"){
+        steps {
+          echo 'Teste stage'
+        }
+      }
+    //   stage("Get Source") {
+    //         steps {
+    //             git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
+    //         }
+    //     }
+    //     stage("Docker Build") {
+    //         steps {
+    //             script {
+    //               dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}"),
+    //               "-f ./apps/dashboard/Dockerfile ."
+    //             }
+    //         }
+    //     }
+    //     stage("Docker push Image") {
+    //         steps {
+    //             docker.withRegistry('https://registry.hub.dokcer.com', 'dokcerhub'){
+    //               dockerapp.push('latest')
+    //               dokcerapp.push("${evn.BUILD_ID}")
+    //             }
+    //         }
+    //     }
+    }
+}
