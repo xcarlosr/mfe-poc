@@ -31,9 +31,11 @@ pipeline {
       // }
 
       stage('Build') {
-       script {
-          sh 'ls'
-          // sh 'ng build --prod --aot --sm --progress=false'
+        steps {
+          script {
+            sh 'ls'
+            // sh 'ng build --prod --aot --sm --progress=false'
+          }
         }
       }
 
