@@ -18,6 +18,7 @@ export class UserService {
 
   logout(){
     this.isUserLoggedIn.next(false);
+    console.log('teste');
   }
 
 
