@@ -48,30 +48,30 @@ pipeline {
       stages {
           stage('Create Image') {
             steps {
-              script {
-                sh 'cd ./apps/dashboard/'
-                sh 'ls'
-                // dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/")
-              }
+              sh 'cd ./apps/dashboard/'
+              sh 'ls'
+              // script {
+              //   dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/")
+              // }
             }
           }
           stage('Push Image') {
               steps {
-                script {
-                      // docker.withRegistry('', $dockerId){
-                      // dockerImage.push('latest')
-                      // dockerImage.push("$BUILD_NUMBER")
-                    }
-                }
+                // script {
+                //       docker.withRegistry('', $dockerId){
+                //       dockerImage.push('latest')
+                //       dockerImage.push("$BUILD_NUMBER")
+                //     }
+                // }
             }
           }
 
           stage('Remove Unused docker image') {
-            steps{
-              // sh "docker rmi $imageName:$BUILD_NUMBER"
-              // sh "docker rmi $imageName:latest"
+            // steps{
+            //   sh "docker rmi $imageName:$BUILD_NUMBER"
+            //   sh "docker rmi $imageName:latest"
 
-            }
+            // }
           }
       }
     }
