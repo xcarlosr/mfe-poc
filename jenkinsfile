@@ -25,16 +25,16 @@ pipeline {
       }
     }
 
-      // stage('Test') {
-      //     withEnv(["CHROME_BIN=/usr/bin/chromium-browser"]) {
-      //       sh 'ng test --progress=false --watch false'
-      //     }
-      //     junit '**/test-results.xml'
-      // }
+    // stage('Test') {
+    //     withEnv(["CHROME_BIN=/usr/bin/chromium-browser"]) {
+    //       sh 'ng test --progress=false --watch false'
+    //     }
+    //     junit '**/test-results.xml'
+    // }
 
-      // stage('Lint') {
-      //     sh 'ng lint'
-      // }
+    // stage('Lint') {
+    //     sh 'ng lint'
+    // }
 
     stage('Build All Projects ') {
       steps {
@@ -49,16 +49,18 @@ pipeline {
           stage('Create Image') {
             steps {
               script {
-                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/")
+                sh 'cd ./apps/dashboard/'
+                sh 'ls'
+                // dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/")
               }
             }
           }
           stage('Push Image') {
               steps {
                 script {
-                      docker.withRegistry('', $dockerId){
-                      dockerImage.push('latest')
-                      dockerImage.push("$BUILD_NUMBER")
+                      // docker.withRegistry('', $dockerId){
+                      // dockerImage.push('latest')
+                      // dockerImage.push("$BUILD_NUMBER")
                     }
                 }
             }
@@ -73,8 +75,6 @@ pipeline {
           }
       }
     }
-
-
 
     // stage("Docker Build") {
     //   stages{
@@ -96,17 +96,17 @@ pipeline {
     //   }
     // }
 
-      // stage('Archive') {
-      //     sh 'tar -cvzf dist.tar.gz --strip-components=1 dist'
-      //     archive 'dist.tar.gz'
-      // }
+    // stage('Archive') {
+    //     sh 'tar -cvzf dist.tar.gz --strip-components=1 dist'
+    //     archive 'dist.tar.gz'
+    // }
 
-      // stage('Deploy') {
-      //     // milestone()
-      //  steps {
-      //     echo "Deploying..."
-      //   }
-      // }
+    // stage('Deploy') {
+    //     // milestone()
+    //  steps {
+    //     echo "Deploying..."
+    //   }
+    // }
 
 
     //   stage("Get Source") {
