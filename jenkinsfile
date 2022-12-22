@@ -52,7 +52,7 @@ pipeline {
               sh 'cd ./apps/dashboard/'
               sh 'ls'
               script {
-                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile")
+                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard")
               }
             }
           }
