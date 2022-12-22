@@ -5,7 +5,7 @@ pipeline {
     stages {
       stage("Updade Source"){
         steps {
-          deleteDir()
+          // deleteDir()
           checkout scm
         }
       }
