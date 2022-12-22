@@ -49,7 +49,7 @@ pipeline {
           stage('Create Image') {
             steps {
               script {
-                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/ ")
+                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/")
               }
             }
           }
