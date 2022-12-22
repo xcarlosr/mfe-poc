@@ -48,6 +48,7 @@ pipeline {
       stages {
           stage('Create Image') {
             steps {
+              echo "Create Image..."
               sh 'cd ./apps/dashboard/'
               sh 'ls'
               // script {
@@ -57,6 +58,7 @@ pipeline {
           }
           stage('Push Image') {
               steps {
+                echo "Push Image..."
                 // script {
                 //       docker.withRegistry('', $dockerId){
                 //       dockerImage.push('latest')
@@ -67,11 +69,12 @@ pipeline {
           }
 
           stage('Remove Unused docker image') {
-            // steps{
+            steps{
+              echo "Remove Unused docker image..."
             //   sh "docker rmi $imageName:$BUILD_NUMBER"
             //   sh "docker rmi $imageName:latest"
 
-            // }
+            }
           }
       }
     }
