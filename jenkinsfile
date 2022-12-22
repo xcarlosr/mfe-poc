@@ -1,22 +1,29 @@
 #!/usr/bin/env groov
 pipeline {
-    agent any
-    tools { nodejs "node" }
-    stages {
-      stage("Updade Source"){
-        steps {
-          // deleteDir()
-          checkout scm
-        }
-      }
+  environment {
+    imageName = "mfe/dashboard"
+    dockerId = 'dockerhub'
+    dockerImage = ''
+  }
 
-      stage('NPM Install') {
-        steps {
-          script {
-              sh 'npm i'
-          }
+  agent any
+  tools { nodejs "node" }
+
+  stages {
+    stage("Updade Source"){
+      steps {
+        // deleteDir()
+        checkout scm
+      }
+    }
+
+    stage('NPM Install') {
+      steps {
+        script {
+            sh 'npm i'
         }
       }
+    }
 
       // stage('Test') {
       //     withEnv(["CHROME_BIN=/usr/bin/chromium-browser"]) {
@@ -29,35 +36,43 @@ pipeline {
       //     sh 'ng lint'
       // }
 
-      stage('Build All Projects ') {
-        steps {
-          script {
-            sh 'npx nx build dashboard'
-          }
+    stage('Build All Projects ') {
+      steps {
+        script {
+          sh 'npx nx build dashboard'
         }
       }
+    }
 
-      stage('Docker') {
-        stages {
-            stage('Create Image') {
+    stage('Docker') {
+      stages {
+          stage('Create Image') {
+            steps {
+              script {
+                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
+              }
+            }
+          }
+          stage('Push Image') {
               steps {
                 script {
-                  dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}","-f ./apps/dashboard/Dockerfile ./apps/dashboard/ ")
+                      docker.withRegistry('', $dockerId){
+                      dockerImage.push('latest')
+                      dockerImage.push("$BUILD_NUMBER")
+                    }
                 }
-              }
             }
-            stage('Push Image') {
-                steps {
-                  script {
-                       docker.withRegistry('https://hub.docker.com/', 'dockerhub'){
-                        dockerapp.push('latest')
-                        dokcerapp.push("${evn.BUILD_ID}")
-                      }
-                  }
-              }
+          }
+
+          stage('Remove Unused docker image') {
+            steps{
+              sh "docker rmi $imageName:$BUILD_NUMBER"
+              sh "docker rmi $imageName:latest"
+
             }
-        }
+          }
       }
+    }
 
 
 
@@ -115,5 +130,5 @@ pipeline {
     //             }
     //         }
     //     }
-    }
+  }
 }
