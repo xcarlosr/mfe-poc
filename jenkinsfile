@@ -48,9 +48,6 @@ pipeline {
       stages {
           stage('Create Image') {
             steps {
-              echo "Create Image..."
-              sh 'cd ./apps/dashboard/'
-              sh 'ls'
               script {
                 dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard")
               }
@@ -59,21 +56,20 @@ pipeline {
           stage('Push Image') {
               steps {
                 echo "Push Image..."
-                // script {
-                //       docker.withRegistry('', $dockerId){
-                //       dockerImage.push('latest')
-                //       dockerImage.push("$BUILD_NUMBER")
-                //     }
-                // }
+                script {
+                      docker.withRegistry('https://hub.docker.com/repository/docker/xcarlosr/mfe-dashboard', $dockerId){
+                      dockerImage.push('latest')
+                      dockerImage.push("$BUILD_NUMBER")
+                    }
+                }
             }
           }
 
           stage('Remove Unused docker image') {
             steps{
               echo "Remove Unused docker image..."
-            //   sh "docker rmi $imageName:$BUILD_NUMBER"
-            //   sh "docker rmi $imageName:latest"
-
+              sh "docker rmi $imageName:$BUILD_NUMBER"
+              sh "docker rmi $imageName:latest"
             }
           }
       }
