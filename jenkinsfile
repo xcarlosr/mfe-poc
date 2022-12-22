@@ -51,9 +51,9 @@ pipeline {
               echo "Create Image..."
               sh 'cd ./apps/dashboard/'
               sh 'ls'
-              // script {
-              //   dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard/")
-              // }
+              script {
+                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
+              }
             }
           }
           stage('Push Image') {
