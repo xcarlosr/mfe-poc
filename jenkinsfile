@@ -5,7 +5,7 @@ pipeline {
     stages {
       stage("Updade Source"){
         steps {
-          echo 'Atualizando o projeto'
+          deleteDir()
           checkout scm
         }
       }
@@ -41,9 +41,8 @@ pipeline {
         stages {
             stage('Create Image') {
               steps {
-                  script {
-                    sh 'sed -i "s|@DOCKER_REGISTRY@|${DOCKER_REGISTRY}|g" Dockerfile'
-                    dockerImage = docker.build registry + "mfe-dashboard:$BUILD_NUMBER"
+                script {
+                  dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}","-f ./apps/dashboard/Dockerfile .")
                 }
               }
             }
