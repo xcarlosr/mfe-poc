@@ -57,7 +57,7 @@ pipeline {
               steps {
                 echo "Push Image..."
                 script {
-                      docker.withRegistry('https://hub.docker.com/repository/docker/xcarlosr/mfe-dashboard', $dockerId){
+                      docker.withRegistry('', $dockerId){
                       dockerImage.push('latest')
                       dockerImage.push("$BUILD_NUMBER")
                     }
