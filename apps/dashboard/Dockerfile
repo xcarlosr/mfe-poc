@@ -1,4 +1,3 @@
-
 FROM nginx:latest
 
 WORKDIR /app/server
