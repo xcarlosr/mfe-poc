@@ -49,7 +49,7 @@ pipeline {
           stage('Create Image') {
             steps {
               script {
-                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile ./apps/dashboard")
+                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
               }
             }
           }
@@ -108,11 +108,11 @@ pipeline {
     // }
 
 
-      stage("Get Source") {
-            steps {
-                git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
-            }
-        }
+      // stage("Get Source") {
+      //       steps {
+      //           git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
+      //       }
+      //   }
     //     stage("Docker Build") {
     //         steps {
     //             script {
