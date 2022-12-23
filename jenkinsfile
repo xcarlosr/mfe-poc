@@ -108,11 +108,11 @@ pipeline {
     // }
 
 
-    //   stage("Get Source") {
-    //         steps {
-    //             git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
-    //         }
-    //     }
+      stage("Get Source") {
+            steps {
+                git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
+            }
+        }
     //     stage("Docker Build") {
     //         steps {
     //             script {

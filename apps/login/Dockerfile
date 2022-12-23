@@ -1,8 +1,10 @@
-FROM nginx:latest
+FROM nginx:alpine
 
-COPY ../dist/apps/login /usr/share/nginx/html
+WORKDIR /app/server
 
-COPY /apps/login/nginx.conf  /etc/nginx/conf.d/default.conf
+COPY ./dist/apps/login /usr/share/nginx/html
+
+COPY ./apps/login/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

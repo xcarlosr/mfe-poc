@@ -1,9 +1,11 @@
 
 FROM nginx:latest
 
-COPY ../dist/apps/dashboard /usr/share/nginx/html
+WORKDIR /app/server
 
-COPY /apps/dashboard/nginx.conf  /etc/nginx/conf.d/default.conf
+COPY ./dist/apps/dashboard /usr/share/nginx/html
+
+COPY ./apps/dashboard/nginx.conf  /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
