@@ -6,6 +6,7 @@ import { UserService } from '@mfe-bcpa/shared/data-access-user';
   template: `
     <div class="login-app">
       <form class="login-form" (ngSubmit)="login()">
+        <h2>Login App</h2>
         <label>
           Username:
           <input type="text" name="username" [(ngModel)]="username" />

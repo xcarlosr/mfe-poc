@@ -2,10 +2,11 @@ version: '3.4'
 
 services:
   mfe-dashboard:
-    image: mfe-dashboard-app
-    build:
-      context: .
-      dockerfile: /apps/dashboard/Dockerfile
+    container_name: app-mfe-dashboard
+    image: xcarlosr/mfe-dashboard:latest
+    # build:
+    #   context: .
+    #   dockerfile: /apps/dashboard/Dockerfile
     restart: always
     ports:
       - "4200:80"
@@ -13,10 +14,12 @@ services:
       - rest
 
   mfe-login:
-    image: mfe-login-app
-    build:
-      context: .
-      dockerfile: /apps/login/Dockerfile
+    container_name: app-mfe-login
+    image: xcarlosr/mfe-login:latest
+    # image: mfe-login-app
+    # build:
+    #   context: .
+    #   dockerfile: /apps/login/Dockerfile
     restart: always
     ports:
       - "4201:80"
