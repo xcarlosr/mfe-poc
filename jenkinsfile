@@ -44,7 +44,7 @@ pipeline {
       }
     }
 
-     stage('Executed Test ') {
+     stage('Validated Unit Test ') {
       steps {
         script {
           sh 'npx nx test dashboard'
@@ -52,7 +52,7 @@ pipeline {
       }
     }
 
-    stage('Executed lint ') {
+    stage('Validating Code Lint ') {
       steps {
         script {
           sh 'npx nx lint dashboard'
