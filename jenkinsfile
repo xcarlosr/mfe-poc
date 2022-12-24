@@ -57,7 +57,7 @@ pipeline {
               steps {
                 echo "Push Image..."
                 script {
-                      docker.withRegistry('', $dockerhubId){
+                      docker.withRegistry('', dockerhubId){
                       dockerImage.push('latest')
                       dockerImage.push("$BUILD_NUMBER")
                     }
