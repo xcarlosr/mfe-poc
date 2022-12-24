@@ -39,7 +39,23 @@ pipeline {
     stage('Build All Projects ') {
       steps {
         script {
-          sh 'npx nx build dashboard'
+          sh 'npx nx build'
+        }
+      }
+    }
+
+     stage('Executed Test ') {
+      steps {
+        script {
+          sh 'npx nx test dashboard'
+        }
+      }
+    }
+
+    stage('Executed lint ') {
+      steps {
+        script {
+          sh 'npx nx lint dashboard'
         }
       }
     }
