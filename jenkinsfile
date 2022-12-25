@@ -13,12 +13,18 @@ pipeline {
     stage("Updade Source"){
       steps {
         // deleteDir()
+        when {
+          changeset "**/apps/dashboard/*"
+        }
         checkout scm
       }
     }
 
     stage('NPM Install') {
       steps {
+        when {
+          changeset "**/apps/dashboard/*"
+        }
         script {
             sh 'npm i'
         }
@@ -38,6 +44,9 @@ pipeline {
 
     stage('Build All Projects ') {
       steps {
+        when {
+          changeset "**/apps/dashboard/*"
+        }
         script {
           sh 'npx nx build'
         }
@@ -46,6 +55,9 @@ pipeline {
 
      stage('Validated Unit Test ') {
       steps {
+        when {
+          changeset "**/apps/dashboard/*"
+        }
         script {
           sh 'npx nx test dashboard'
         }
@@ -54,6 +66,9 @@ pipeline {
 
     stage('Validating Code Lint ') {
       steps {
+        when {
+          changeset "**/apps/dashboard/*"
+        }
         script {
           sh 'npx nx lint dashboard'
         }
@@ -62,6 +77,9 @@ pipeline {
 
     stage('Docker') {
       stages {
+        when {
+          changeset "**/apps/dashboard/*"
+        }
           stage('Create Image') {
             steps {
               script {
