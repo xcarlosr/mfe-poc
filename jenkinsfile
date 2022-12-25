@@ -4,6 +4,7 @@ pipeline {
     imageName = "xcarlosr/mfe-dashboard"
     dockerhubId = 'dockerhub'
     dockerImage = ''
+    appFolderPath = "**/${projectDirectory}/apps/login/**"
   }
 
   agent any
@@ -77,10 +78,10 @@ pipeline {
 
     stage('Docker') {
       stages {
-        when {
-          changeset "**/apps/dashboard/*"
-        }
           stage('Create Image') {
+            when {
+              changeset "**/apps/dashboard/*"
+            }
             steps {
               script {
                 dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
@@ -88,6 +89,9 @@ pipeline {
             }
           }
           stage('Push Image') {
+              when {
+                changeset "**/apps/dashboard/*"
+              }
               steps {
                 echo "Push Image..."
                 script {
@@ -100,6 +104,7 @@ pipeline {
           }
 
           stage('Remove Unused docker image') {
+            when { changeset "**/apps/dashboard/*"}
             steps{
               echo "Remove Unused docker image..."
               sh "docker rmi $imageName:latest"
