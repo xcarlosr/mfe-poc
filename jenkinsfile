@@ -1,149 +1,94 @@
-#!/usr/bin/env groov
 pipeline {
+  agent any
+  tools { nodejs "node" }
+
   environment {
     imageName = "xcarlosr/mfe-dashboard"
     dockerhubId = 'dockerhub'
     dockerImage = ''
+    appDashboardPath = "**/apps/dashboard/**"
+    nodeModelues = fileExists "${WORKSPACE}/node_modules"
+
   }
 
-  agent any
-  tools { nodejs "node" }
-
   stages {
-    stage("Updade Source"){
-      steps {
-        // deleteDir()
-        checkout scm
-      }
-    }
-
-    stage('NPM Install') {
-      steps {
-        script {
-            sh 'npm i'
-        }
-      }
-    }
-
-    // stage('Test') {
-    //     withEnv(["CHROME_BIN=/usr/bin/chromium-browser"]) {
-    //       sh 'ng test --progress=false --watch false'
-    //     }
-    //     junit '**/test-results.xml'
-    // }
-
-    // stage('Lint') {
-    //     sh 'ng lint'
-    // }
-
-    stage('Build All Projects ') {
-      steps {
-        script {
-          sh 'npx nx build'
-        }
-      }
-    }
-
-    //  stage('Validated Unit Test ') {
-    //   steps {
-    //     script {
-    //       sh 'npx nx test dashboard'
-    //     }
-    //   }
-    // }
-
-    // stage('Validating Code Lint ') {
-    //   steps {
-    //     script {
-    //       sh 'npx nx lint dashboard'
-    //     }
-    //   }
-    // }
-
-    stage('Docker') {
-      stages {
-          stage('Create Image') {
+        stage("Updade Source"){
             steps {
-              script {
-                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
-              }
+                // cleanWs()
+                git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
             }
-          }
-          stage('Push Image') {
-              steps {
-                echo "Push Image..."
-                script {
-                      docker.withRegistry('', dockerhubId){
-                      dockerImage.push('latest')
-                      dockerImage.push("$BUILD_NUMBER")
+        }
+
+        stage('Validated change app Dashboard') {
+            when {
+               changeset appDashboardPath
+            }
+            stages {
+                stage('NPM Install') {
+                    when { equals expected: false, actual: nodeModelues }
+                    steps {
+                        script {
+                          echo 'executando NPM I'
+                          sh 'npm i'
+                        }
+                    }
+                }
+
+                stage('Build Dashboard App ') {
+                    steps {
+                        script {
+                            sh 'npx nx run dashboard:build:prodution'
+                        }
+                    }
+                }
+                stage('Validating Unit Test ') {
+                    steps {
+                        script {
+                          sh 'npx nx test dashboard'
+                        }
+                    }
+                }
+
+                stage('Validating Code Lint ') {
+                    steps {
+                        script {
+                          sh 'npx nx lint dashboard'
+                        }
+                    }
+                }
+
+                stage('Docker') {
+                    stages {
+                        stage('Create Image Dashboard') {
+                            steps {
+                              script {
+                                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
+                              }
+                            }
+                        }
+
+                        stage('Push Image Dashboard') {
+                            steps {
+                                echo "Push Image Dashboard..."
+                                script {
+                                      docker.withRegistry('', dockerhubId){
+                                      dockerImage.push('latest')
+                                      dockerImage.push("$BUILD_NUMBER")
+                                    }
+                                }
+                            }
+                        }
+
+                        stage('Remove Image Dashboard') {
+                            steps{
+                                echo "Remove Image Dashboard..."
+                                sh "docker rmi $imageName:latest"
+                                sh "docker rmi $imageName:$BUILD_NUMBER"
+                            }
+                        }
                     }
                 }
             }
-          }
-
-          stage('Remove dockers images') {
-            steps{
-              echo "Remove Unused docker image..."
-              sh "docker rmi $imageName:latest"
-              sh "docker rmi $imageName:$BUILD_NUMBER"
-            }
-          }
-      }
-    }
-
-    // stage("Docker Build") {
-    //   stages{
-    //     stage('Create Image') {
-    //       steps {
-    //         script {
-    //           dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}","-f ./apps/dashboard/Dockerfile .")
-    //         }
-    //       }
-    //     }
-    //     stage("Docker push Image") {
-    //         steps {
-    //             docker.withRegistry('https://hub.docker.com/', 'dockerhub'){
-    //               dockerapp.push('latest')
-    //               dokcerapp.push("${evn.BUILD_ID}")
-    //             }
-    //         }
-    //     }
-    //   }
-    // }
-
-    // stage('Archive') {
-    //     sh 'tar -cvzf dist.tar.gz --strip-components=1 dist'
-    //     archive 'dist.tar.gz'
-    // }
-
-    // stage('Deploy') {
-    //     // milestone()
-    //  steps {
-    //     echo "Deploying..."
-    //   }
-    // }
-
-
-    // stage("Get Source") {
-    //       steps {
-    //           git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
-    //       }
-    //   }
-    //     stage("Docker Build") {
-    //         steps {
-    //             script {
-    //               dockerapp = docker.build("mfe/dashboard:${evn.BUILD_ID}"),
-    //               "-f ./apps/dashboard/Dockerfile ."
-    //             }
-    //         }
-    //     }
-    //     stage("Docker push Image") {
-    //         steps {
-    //             docker.withRegistry('https://registry.hub.dokcer.com', 'dokcerhub'){
-    //               dockerapp.push('latest')
-    //               dokcerapp.push("${evn.BUILD_ID}")
-    //             }
-    //         }
-    //     }
-  }
+        }
+   }
 }
