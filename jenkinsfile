@@ -6,7 +6,7 @@ pipeline {
     imageName = "xcarlosr/mfe-dashboard"
     dockerhubId = 'dockerhub'
     dockerImage = ''
-    appDashboardPath = "**/apps/dashboard/**"
+    dashboardPath = "**/apps/dashboard/**"
     nodeModelues = fileExists "${WORKSPACE}/node_modules"
 
   }
@@ -19,9 +19,9 @@ pipeline {
             }
         }
 
-        stage('Validated change app Dashboard') {
+        stage('Validated Change Dashboard') {
             when {
-               changeset appDashboardPath
+               changeset dashboardPath
             }
             stages {
                 stage('NPM Install') {
