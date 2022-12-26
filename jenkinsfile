@@ -39,26 +39,26 @@ pipeline {
     stage('Build All Projects ') {
       steps {
         script {
-          sh 'npx nx build'
+          sh 'npx nx run dashboard:build:production'
         }
       }
     }
 
-     stage('Validated Unit Test ') {
-      steps {
-        script {
-          sh 'npx nx test dashboard'
-        }
-      }
-    }
+    //  stage('Validated Unit Test ') {
+    //   steps {
+    //     script {
+    //       sh 'npx nx test dashboard'
+    //     }
+    //   }
+    // }
 
-    stage('Validating Code Lint ') {
-      steps {
-        script {
-          sh 'npx nx lint dashboard'
-        }
-      }
-    }
+    // stage('Validating Code Lint ') {
+    //   steps {
+    //     script {
+    //       sh 'npx nx lint dashboard'
+    //     }
+    //   }
+    // }
 
     stage('Docker') {
       stages {
@@ -81,7 +81,7 @@ pipeline {
             }
           }
 
-          stage('Remove Unused docker image') {
+          stage('Remove dockers images') {
             steps{
               echo "Remove Unused docker image..."
               sh "docker rmi $imageName:latest"
