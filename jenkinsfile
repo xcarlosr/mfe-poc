@@ -39,7 +39,7 @@ pipeline {
     stage('Build All Projects ') {
       steps {
         script {
-          sh 'npx nx run dashboard:build:production'
+          sh 'nx run build'
         }
       }
     }
