@@ -25,7 +25,7 @@ pipeline {
             }
             stages {
                 stage('NPM Install') {
-                    when { equals expected: false, actual: nodeModelues }
+                    // when { equals expected: false, actual: nodeModelues }
                     steps {
                         script {
                           echo 'executando NPM I'
