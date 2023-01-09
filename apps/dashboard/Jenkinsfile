@@ -1,0 +1,94 @@
+pipeline {
+  agent any
+  tools { nodejs "node" }
+
+  environment {
+    imageName = "xcarlosr/mfe-dashboard"
+    dockerhubId = 'dockerhub'
+    dockerImage = ''
+    dashboardPath = "**/apps/dashboard/**"
+    nodeModelues = fileExists "${WORKSPACE}/node_modules"
+
+  }
+
+  stages {
+        stage("Updade Source"){
+            steps {
+                // cleanWs()
+                git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
+            }
+        }
+
+        stage('Validated Change Dashboard') {
+            when {
+               changeset dashboardPath
+            }
+            stages {
+                stage('NPM Install') {
+                    // when { equals expected: false, actual: nodeModelues }
+                    steps {
+                        script {
+                          echo 'executando NPM I'
+                          sh 'npm i'
+                        }
+                    }
+                }
+
+                stage('Build Dashboard App ') {
+                    steps {
+                        script {
+                            sh 'npx nx run dashboard:build:prodution'
+                        }
+                    }
+                }
+                stage('Validating Unit Test ') {
+                    steps {
+                        script {
+                          sh 'npx nx test dashboard'
+                        }
+                    }
+                }
+
+                stage('Validating Code Lint ') {
+                    steps {
+                        script {
+                          sh 'npx nx lint dashboard'
+                        }
+                    }
+                }
+
+                stage('Docker') {
+                    stages {
+                        stage('Create Image Dashboard') {
+                            steps {
+                              script {
+                                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/dashboard/Dockerfile .")
+                              }
+                            }
+                        }
+
+                        stage('Push Image Dashboard') {
+                            steps {
+                                echo "Push Image Dashboard..."
+                                script {
+                                      docker.withRegistry('', dockerhubId){
+                                      dockerImage.push('latest')
+                                      dockerImage.push("$BUILD_NUMBER")
+                                    }
+                                }
+                            }
+                        }
+
+                        stage('Remove Image Dashboard') {
+                            steps{
+                                echo "Remove Image Dashboard..."
+                                sh "docker rmi $imageName:latest"
+                                sh "docker rmi $imageName:$BUILD_NUMBER"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+   }
+}

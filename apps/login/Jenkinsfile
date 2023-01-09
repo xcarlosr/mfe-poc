@@ -1,0 +1,94 @@
+pipeline {
+  agent any
+  tools { nodejs "node" }
+
+  environment {
+    imageName = "xcarlosr/mfe-login"
+    dockerhubId = 'dockerhub'
+    dockerImage = ''
+    dashboardPath = "**/apps/login/**"
+    nodeModelues = fileExists "${WORKSPACE}/node_modules"
+
+  }
+
+  stages {
+        stage("Updade Source"){
+            steps {
+                // cleanWs()
+                git url: 'https://github.com/xcarlosr/mfe-poc.git', branch: 'master'
+            }
+        }
+
+        stage('Validated Change Login') {
+            when {
+               changeset dashboardPath
+            }
+            stages {
+                stage('NPM Install') {
+                    // when { equals expected: false, actual: nodeModelues }
+                    steps {
+                        script {
+                          echo 'executando NPM I'
+                          sh 'npm i'
+                        }
+                    }
+                }
+
+                stage('Build Login App ') {
+                    steps {
+                        script {
+                            sh 'npx nx run login:build:prodution'
+                        }
+                    }
+                }
+                stage('Validating Unit Test ') {
+                    steps {
+                        script {
+                          sh 'npx nx test dashboard'
+                        }
+                    }
+                }
+
+                stage('Validating Code Lint ') {
+                    steps {
+                        script {
+                          sh 'npx nx lint login'
+                        }
+                    }
+                }
+
+                stage('Docker') {
+                    stages {
+                        stage('Create Image Login') {
+                            steps {
+                              script {
+                                dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/login/Dockerfile .")
+                              }
+                            }
+                        }
+
+                        stage('Push Image Login') {
+                            steps {
+                                echo "Push Image Login..."
+                                script {
+                                      docker.withRegistry('', dockerhubId){
+                                      dockerImage.push('latest')
+                                      dockerImage.push("$BUILD_NUMBER")
+                                    }
+                                }
+                            }
+                        }
+
+                        stage('Remove Image Login') {
+                            steps{
+                                echo "Remove Image Login..."
+                                sh "docker rmi $imageName:latest"
+                                sh "docker rmi $imageName:$BUILD_NUMBER"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+   }
+}
