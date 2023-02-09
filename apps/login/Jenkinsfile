@@ -6,8 +6,8 @@ pipeline {
     imageName = "xcarlosr/mfe-login"
     dockerhubId = 'dockerhub'
     dockerImage = ''
-    dashboardPath = "**/apps/login/**"
-    nodeModelues = fileExists "${WORKSPACE}/node_modules"
+    appLoginPath = "**/apps/login/**"
+    existNodeModelues = fileExists "${WORKSPACE}/node_modules"
 
   }
 
@@ -19,17 +19,15 @@ pipeline {
             }
         }
 
-        stage('Validated Change Login') {
-            when {
-               changeset dashboardPath
-            }
+        stage('Validated change app Login') {
+            when { changeset appLoginPath }
             stages {
                 stage('NPM Install') {
-                    // when { equals expected: false, actual: nodeModelues }
+                    when { equals expected: false, actual: existNodeModelues }
                     steps {
                         script {
-                          echo 'executando NPM I'
-                          sh 'npm i'
+        					echo 'executando NPM I'
+        					sh 'npm i'
                         }
                     }
                 }
@@ -37,19 +35,19 @@ pipeline {
                 stage('Build Login App ') {
                     steps {
                         script {
-                            sh 'npx nx run login:build:prodution'
+                            sh 'npx nx run login:build:development --skip-nx-cache'
                         }
                     }
                 }
                 stage('Validating Unit Test ') {
                     steps {
                         script {
-                          sh 'npx nx test dashboard'
+                          sh 'npx nx test login'
                         }
                     }
                 }
 
-                stage('Validating Code Lint ') {
+                stage('Validating Code lint ') {
                     steps {
                         script {
                           sh 'npx nx lint login'
@@ -59,7 +57,7 @@ pipeline {
 
                 stage('Docker') {
                     stages {
-                        stage('Create Image Login') {
+                        stage('Create Image') {
                             steps {
                               script {
                                 dockerImage = docker.build("$imageName:$BUILD_NUMBER","-f ./apps/login/Dockerfile .")
@@ -67,9 +65,9 @@ pipeline {
                             }
                         }
 
-                        stage('Push Image Login') {
+                        stage('Push Image') {
                             steps {
-                                echo "Push Image Login..."
+                                echo "Push Image..."
                                 script {
                                       docker.withRegistry('', dockerhubId){
                                       dockerImage.push('latest')
@@ -79,15 +77,22 @@ pipeline {
                             }
                         }
 
-                        stage('Remove Image Login') {
+                        stage('Remove Unused docker image') {
                             steps{
-                                echo "Remove Image Login..."
+                                echo "Remove Unused docker image..."
                                 sh "docker rmi $imageName:latest"
                                 sh "docker rmi $imageName:$BUILD_NUMBER"
                             }
                         }
                     }
                 }
+            }
+        }
+
+        stage("Final Pipe"){
+            steps {
+                echo 'finalizado a PIPE'
+
             }
         }
    }
