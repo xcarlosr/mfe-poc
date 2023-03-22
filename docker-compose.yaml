@@ -7,7 +7,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: /apps/dashboard/Dockerfile
-    restart: always
+    restart: on-failure
     ports:
       - "4200:80"
     networks:
@@ -20,7 +20,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: /apps/login/Dockerfile
-    restart: always
+    restart: on-failure
     ports:
       - "4201:80"
     networks:
